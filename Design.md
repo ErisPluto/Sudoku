@@ -23,10 +23,9 @@
 				<li>Generate parts of sudokus randomly <b>(Proposal 1)</b>/ Get sudokus using random index it, and get them randomly <b>(Proposal 2)</b></li>
 			</ul>
 		</li>
-		<li>The function to generate the sudoku puzzle from the sudoku
+		<li>The function to solve the sudoku puzzle
 			<ul>
-				<li>Leave blanks in each part ramdomly</li>
-				<li>*Set three ranks making different numbers of blank</li>
+				<li>Use the same way as generate sudokus</li>
 			</ul>
 		</li>
 		<li>The function the output the sudokus and puzzles to files</li>
@@ -82,7 +81,7 @@
 				<li>int main(int argc, char* args[]);
 					<ul>
 						<li>In the 't' mode, call GetSudokus() to get certain number of sudokus according to the argment</li>
-						<li>In the 's' mode, call GetSodukus() to get sudoku and call CreatePuzzles() to create puzzle.</li>
+						<li>In the 's' mode, call SolveSodukus() to solve sudoku  puzzle.</li>
 					</ul>
 				</li>
 				<li>void GetSudokus()
@@ -113,15 +112,20 @@
 						<li>Init the set of 1 - 9 in a random sequence, make sure that sets are different from each other.</li>
 					</ul>
 				</li>
-				<li>int** CreatePuzzles()
+				<li>int** SolvePuzzles()
 					<ul>
-						<li>Get a random number in a certain range to decide the blanks in a square.</li>
-						<li>Create blanks in squares and rows and columns relatively evenly</li>
+						<li>Call FileInput to get sudoku puzzles</li>
+						<li>Call GenerateSudoku() to generate sudoku based on the puzzle</li>
 					</ul>
 				</li>
 				<li>void FileOutput(char* name, char* path)
 					<ul>
 						<li>Create the file 'name' in 'path', and output the content into it</li>
+					</ul>
+				</li>
+				<li>void FileInput(char* name, char* path)
+					<ul>
+						<li>Read sudoku puzzles from the file 'name' in 'path', and change the strings into two-demension array</li>
 					</ul>
 				</li>
 			</ul>
@@ -133,6 +137,6 @@
 <div>
 	<h4>Notes</h4>
 	<ul>
-		<li>The items with '*' is optional</li>
+		<li>Empty</li>
 	</ul>
 </div>

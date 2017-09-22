@@ -26,12 +26,28 @@
 		</thead>
 		<tbody style = "font-size:15px">
 		<tr>
+			<td>1</td>
+			<td>Mixtakes about "&&" and "||"</td>
 			<td></td>
+			<td>A</td>
+			<td>S</td>
+			<td>9/22</td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td>Repeation may happen if the request number is large enough</td>
 			<td></td>
+			<td>B</td>
+			<td>N</td>
+			<td>9/23</td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td>The append mode to open files can cause chaos</td>
 			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>N</td>
+			<td>B</td>
+			<td>9/23</td>
 		</tr>
 		</tbody>
 	</table>

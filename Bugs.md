@@ -1,8 +1,8 @@
 <h1 align = "center">Debug Record</h1>
 <div align = "right">
-	<p><i>Project:</i></p>
-	<p><i>Start Date:</i></p>
-	<p><i>Administrator:</i></p>
+	<p><i>Project:Sudoku - Personal Project</i></p>
+	<p><i>Start Date:2017/09/19</i></p>
+	<p><i>Administrator: Eris Pluto</i></p>
 </div>
 <div>
 	<table>
@@ -18,7 +18,7 @@
 		<tr>
 			<th>Seq</th>
 			<th>Title</th>
-			<th>Con</th>
+			<th>Con/Sol</th>
 			<th>O</th>
 			<th>S</th>
 			<th>Date</th>
@@ -28,7 +28,7 @@
 		<tr>
 			<td>1</td>
 			<td>Mixtakes about "&&" and "||"</td>
-			<td></td>
+			<td>When decide which character to choose, set the condition as "||" by mistake<hr>Changed it to "&&"</td>
 			<td>A</td>
 			<td>S</td>
 			<td>9/22</td>
@@ -44,9 +44,9 @@
 		<tr>
 			<td>3</td>
 			<td>The append mode to open files can cause chaos</td>
-			<td></td>
-			<td>N</td>
+			<td>Just generate sudokus and solve puzzles in a same file and append to the file continuously.<hr>Set a argment when output and clean the file before using it by opening it in 'out' mode</td>
 			<td>B</td>
+			<td>S</td>
 			<td>9/23</td>
 		</tr>
 		</tbody>

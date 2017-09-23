@@ -50,7 +50,10 @@
 				<li>Finish the related part in the blog</li>	
 			</td>
 			<td>9/22</td>
-			<td></td>
+			<td>
+				<li>The code is finished and can get the correct result in a proper range</li>
+				<li>The blog has not been finished</li>
+			</td>
 		</tr>
 		<tr>
 			<td>Test</td>

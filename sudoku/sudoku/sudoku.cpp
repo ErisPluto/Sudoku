@@ -10,46 +10,60 @@
 using namespace std;
 
 #define MAX 32767
+#define COUNT 40320
+int setFile[4032];
 
+void CreateSet(int i, int *set, int *rec);
 void GetSudokus(int num);
-int GenerateSudokus(int *initSet, int **row, int **column, int **square, int **sudoku, int num, int iter, int i, int j);
-int** CreateSudokus(char *sudokuString);
+int GenerateSudokus(int *initSet, int **row, int **column, int **square, int **sudoku, int num, int iter, int i, int j, char *path);
 void InitSudokus();
 int* InitSet();
-void SolvePuzzles(int **puzzle);
+void SolvePuzzles(int **puzzle, char *path);
 void FileOutput(char* path, int** sudoku);
-void FileInput(char* path);
+void PuzzleInput(char* path);
 void print(int **a);
+int ToNum(char* n);
 
 int main(int argc, char* args[])
 {
-	//GetSudokus(20);
-	FileInput("a.txt");
-	/*char *path, *n;
-	int num = 0, i = 0;
 	srand((unsigned)(time(NULL)));
-	if (argc == 2) {
+
+	if (argc == 3) {
 		if (strcmp(args[1], "-t") == 0) {
-			n = args[2];
-			for (i = 0; i < strlen(n); i++) {
-				num = num * 10 + (n[i] - '0');
-			}
-			GetSudokus(num);
+			GetSudokus(ToNum(args[2]));
 		}
 		else if(strcmp(args[1], "-s") == 0)
 		{
-			SolvePuzzles(args[2]);
+			PuzzleInput(args[2]);
 		}
 		else {
 			cout << "Please input correct argments" << endl;
 		}
 	}
+	else if (argc == 2 && strcmp(args[1] , "-i") == 0) {
+		InitSudokus();
+	}
 	else {
 		cout << "Please input correct argments" << endl;
-	}*/
-	
+	}
 	getchar();
     return 0;
+}
+
+int ToNum(char* n) {
+	int i = 0, num = 0;
+	for (i = 0; i < strlen(n); i++) {
+		num = num * 10 + (n[i] - '0');
+	}
+	return num;
+}
+
+void InitSudokus() {
+	int *rec = new int[8], *set = new int[9];
+	set[0] = 9;
+	memset(rec, 0, sizeof(int) * 9);
+	CreateSet(1, set, rec);
+	return;
 }
 
 int** CreateArray() {
@@ -73,26 +87,54 @@ void DeleteArray(int **a) {
 	return;
 }
 
-int *InitSet() {
-	int *initSet = new int[9];
-	int i = 0, set[8] = {0};
-	double t = 0;
-	int a = 0;
-	initSet[0] = 9;
-	for (i = 1; i < 9; i++) {
-		a = rand() % 8 + 1;
-		if (set[a - 1] == 0) {
-			initSet[i] = a;
-			set[a - 1] = 1;
+int *InitSet(char sign, char *Str) {
+	ifstream sFile;
+	sFile.open("set.txt");
+	int *initSet = new int[9], i = 0,j = 0;
+	if (!sFile) {
+		int set[8] = { 0 };
+		double t = 0;
+		int a = 0;
+		initSet[0] = 9;
+		for (i = 1; i < 9; i++) {
+			a = rand() % 8 + 1;
+			if (set[a - 1] == 0) {
+				initSet[i] = a;
+				set[a - 1] = 1;
+			}
+			else {
+				i--;
+			}
 		}
-		else {
-			i--;
+	}
+	else {
+		if (sign == 's') {
+			cout << sign;
+			int index = 0;
+			do {
+				index = (rand() * rand()) % (COUNT / 10);
+			} while (setFile[index] != 0);
+			setFile[index] = 1;
+			cout << index;
+			char *str = new char[10];
+			while (j <= index) {
+				sFile.read(str, 10);
+			}
+			for (j = 0; j < 9; j++) {
+				initSet[j] = str[j] - '0';
+			}
+			sFile.close();
+		}
+		else if (sign == 'l') {
+			for (j = 0; j < 9; j++) {
+				initSet[j] = Str[j] - '0';
+			}
 		}
 	}
 	return initSet;
 }
 
-void SolvePuzzles(int **puzzle) {
+void SolvePuzzles(int **puzzle, char *path) {
 	int **row = CreateArray(), **column = CreateArray(), **square = CreateArray();
 	int i = 0, j = 0, t = 0;
 	int *initSet = new int[9];
@@ -110,12 +152,12 @@ void SolvePuzzles(int **puzzle) {
 		}
 	}
 
-	GenerateSudokus(initSet, row, column, square, puzzle, 0, 0, 1, 1);
+	GenerateSudokus(initSet, row, column, square, puzzle, 0, 0, 1, 1, path);
 	DeleteArray(row);
 	DeleteArray(column);
 	DeleteArray(square);
-	//DeleteArray(puzzle);
 }
+
 void print(int **a) {
 	int i = 0, j = 0;
 	for (i = 0; i < 9; i++) {
@@ -131,7 +173,8 @@ void print(int **a) {
 	cout << endl;
 	return;
 }
-int GenerateSudokus(int *initSet, int **row, int **column, int **square, int **sudoku, int i, int j, int num, int iter) {
+
+int GenerateSudokus(int *initSet, int **row, int **column, int **square, int **sudoku, int i, int j, int num, int iter, char *path) {
 	//cout << "SolvePuzzles";
 	if (iter > num)
 		return iter;
@@ -147,11 +190,11 @@ int GenerateSudokus(int *initSet, int **row, int **column, int **square, int **s
 					return iter;
 				}
 				else {
-					iter = GenerateSudokus(initSet, row, column, square, sudoku, i + 1, 0, num, iter);
+					iter = GenerateSudokus(initSet, row, column, square, sudoku, i + 1, 0, num, iter, path);
 				}
 			}
 			else {
-				iter = GenerateSudokus(initSet, row, column, square, sudoku, i, j + 1, num, iter);
+				iter = GenerateSudokus(initSet, row, column, square, sudoku, i, j + 1, num, iter, path);
 			}
 		}
 		l = initSet[k];
@@ -165,16 +208,16 @@ int GenerateSudokus(int *initSet, int **row, int **column, int **square, int **s
 			square[t][k] = 1;
 			if (j == 8) {
 				if (i == 8) {
-					FileOutput("sudoku.txt",sudoku);
+					FileOutput(path,sudoku);
 					//print(sudoku);
 					iter++;
 				}
 				else {
-					iter = GenerateSudokus(initSet, row, column, square, sudoku, i + 1, 0, num, iter);
+					iter = GenerateSudokus(initSet, row, column, square, sudoku, i + 1, 0, num, iter, path);
 				}
 			}
 			else {
-				iter = GenerateSudokus(initSet, row, column, square, sudoku, i, j + 1, num, iter);
+				iter = GenerateSudokus(initSet, row, column, square, sudoku, i, j + 1, num, iter, path);
 			}
 		}
 		if(row[i][k] == 2){
@@ -188,23 +231,61 @@ int GenerateSudokus(int *initSet, int **row, int **column, int **square, int **s
 	return iter;
 }
 
-void GetSudokus(int num) {
-	fstream _file;
-	_file.open ("AllSudokus.txt", ios::in);
-
-	int i = 0;
-	if (!_file)
-	{
-		for (i = 0; i < num; i++) {
-			GenerateSudokus(InitSet(), CreateArray(), CreateArray(), CreateArray(), CreateArray(), 0, 0, 1, 1);
+void CreateSet(int i, int *set, int *rec) {
+	int k = 0;
+	for (k = 0; k < 8; k++) {
+		if (rec[k] != 0) {
+			continue;
 		}
-	}
-	else
-	{
-		//CreateSudokus();
+		set[i] = k + 1;
+			rec[k] = 1;
+			if (i == 8) {
+				ofstream outf;
+				outf.open("set.txt", ios::app);
+				for (i = 0; i < 9; i++) {
+					outf << set[i];
+				}
+				outf << endl;
+				outf.close();
+			}
+			else {
+				CreateSet(i + 1, set, rec);
+			}
+		rec[k] = 0;
 	}
 	return;
+}
 
+void GetSudokus(int num) {
+	ofstream outFile;
+	outFile.open("sudoku.txt", ios::out);
+	outFile.close();
+	int i = 0;
+	char sign, str[10];
+	int turn = num / COUNT;
+	int rest = num - COUNT * turn;
+	double t = (double)num / COUNT;
+	double r = (double)rest / COUNT;
+	ifstream inFile;
+	inFile.open("set.txt");
+	for (i = 0; i < COUNT; i++) {
+		sign = 'l';
+		inFile.read(str, 10);
+		GenerateSudokus(InitSet(sign, str), CreateArray(), CreateArray(), CreateArray(), CreateArray(), 0, 0, turn, 1, "sudoku.txt");
+	}
+	if (r < 0.1) {
+		sign = 's';
+		GenerateSudokus(InitSet(sign, ""), CreateArray(), CreateArray(), CreateArray(), CreateArray(), 0, 0, rest, 1, "sudoku.txt");
+	}
+	else {
+		inFile.seekg(0);
+		for (i = 0; i < rest;i++) {
+			sign = 'l';
+			GenerateSudokus(InitSet(sign, str), CreateArray(), CreateArray(), CreateArray(), CreateArray(), 0, 0, 1, 1, "sudoku.txt");
+		}
+	}
+	inFile.close();
+	return;
 }
 
 void FileOutput(char* path, int** sudoku) {
@@ -225,11 +306,13 @@ void FileOutput(char* path, int** sudoku) {
 	return;
 }
 
-void FileInput(char *path) {
+void PuzzleInput(char *path) {
 	int **puzzle = CreateArray();
 	ifstream inFile;
 	inFile.open(path);
-	
+	ofstream outFile;
+	outFile.open("sudoku.txt", ios::out);
+	outFile.close();
 	char c;
 	int i = 0, j = 0;
 	while (!inFile.eof()) {
@@ -239,7 +322,7 @@ void FileInput(char *path) {
 			puzzle[i][j] = c - '0';
 			if (j == 8) {
 				if (i == 8) {
-					SolvePuzzles(puzzle);
+					SolvePuzzles(puzzle, "sudoku.txt");
 					i = 0;
 					j = 0;
 				}

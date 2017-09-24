@@ -1,0 +1,29 @@
+[2017-09-24 17:20:10] [info] Start Program:
+Path:"C:\Users\h-kps\Desktop\Work Space\Github\Sudoku\sudoku\x64\Debug\sudoku.exe"
+Arguments:-s s.txt 
+Working directory: "C:\Users\h-kps\Desktop\Work Space\Github\Sudoku\sudoku\sudoku\"
+Modules: Selected: C:\Users\h-kps\Desktop\Work Space\Github\Sudoku\sudoku\x64\Debug\sudoku.exe C:\Users\h-kps\Desktop\Work Space\Github\Sudoku\sudoku\x64\Debug\SudokuUnitTest.dll Excluded: 
+Sources: Selected: C:\Users\h-kps\Desktop\Work Space\Github\Sudoku\sudoku\sudoku C:\Users\h-kps\Desktop\Work Space\Github\Sudoku\sudoku\SudokuUnitTest Excluded: 
+Log Level: Normal
+Cover Children: 0
+Aggregate by file: 1
+Continue after C++ exception: 0
+Optimized build support: 0
+Export: Binary C:\Users\h-kps\AppData\Local\Temp\qt4ankm2.bxs 
+Input coverage: 
+Unified diff: 
+Excluded line regular expressions: 
+
+[2017-09-24 17:20:11] [info] Module: C:\Users\h-kps\Desktop\Work Space\Github\Sudoku\sudoku\x64\Debug\sudoku.exe is selected because it matches selected pattern: 
+[2017-09-24 17:20:11] [info] Module: C:\Windows\System32\ntdll.dll is skipped because it matches no selected patterns
+[2017-09-24 17:20:11] [info] Module: C:\Windows\System32\kernel32.dll is skipped because it matches no selected patterns
+[2017-09-24 17:20:11] [info] Module: C:\Windows\System32\KernelBase.dll is skipped because it matches no selected patterns
+[2017-09-24 17:20:11] [info] Module: C:\Windows\System32\msvcp140d.dll is skipped because it matches no selected patterns
+[2017-09-24 17:20:11] [info] Module: C:\Windows\System32\vcruntime140d.dll is skipped because it matches no selected patterns
+[2017-09-24 17:20:11] [info] Module: C:\Windows\System32\ucrtbased.dll is skipped because it matches no selected patterns
+[2017-09-24 17:20:31] [info] Module: C:\Windows\System32\kernel.appcore.dll is skipped because it matches no selected patterns
+[2017-09-24 17:20:31] [info] Module: C:\Windows\System32\msvcrt.dll is skipped because it matches no selected patterns
+[2017-09-24 17:20:31] [info] Module: C:\Windows\System32\rpcrt4.dll is skipped because it matches no selected patterns
+[2017-09-24 17:20:32] [info] ----------------------------------------------------
+[2017-09-24 17:20:32] [info] Coverage binary generated in file: C:\Users\h-kps\AppData\Local\Temp\qt4ankm2.bxs
+[2017-09-24 17:20:32] [info] ----------------------------------------------------

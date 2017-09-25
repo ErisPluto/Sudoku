@@ -10,13 +10,15 @@
 using namespace std;
 
 #define MAX 32767
-#define COUNT 40320
-int setFile[4032];
+#define FIX  9
 
-void GetSudokus(int num);
-int GenerateSudokus(int *initSet, int **row, int **column, int **square, int **sudoku, int num, int iter, int i, int j, char *path);
+int n = 0, N = 0;
+char mode = '\0';
+
+void GetSudokus();
+int GenerateSudokus(int *initSet, int **row, int **column, int **square, int **sudoku, int i, int j, char *path);
 int* InitSet();
-void SolvePuzzles(int **puzzle, char *path);
+int SolvePuzzles(int **puzzle, char *path);
 void FileOutput(char* path, int** sudoku);
 int PuzzleInput(char* path);
 void print(int **a);
@@ -28,15 +30,18 @@ int main(int argc, char* args[])
 	int num;
 	if (argc == 3) {
 		if (strcmp(args[1], "-c") == 0) {
-			num = ToNum(args[2]);
-			if (num < 1 || num > 1000000) {
+			mode = 'c';
+			N = ToNum(args[2]);
+			if (N < 1 || N > 1000000) {
 				cout << "Please input correct argments" << endl;
 				return 0;
 			}
-			GetSudokus(num);
+			cout << N << endl;
+			GetSudokus();
 		}
 		else if(strcmp(args[1], "-s") == 0)
 		{
+			mode = 's';
 			PuzzleInput(args[2]);
 		}
 		else {
@@ -62,6 +67,12 @@ int ToNum(char* n) {
 	return num;
 }
 
+int *CreateSet(int num) {
+	int *set = new int[num];
+	memset(set, 0, sizeof(int) * num);
+	return set;
+}
+
 int** CreateArray() {
 	int **a = NULL;
 	a = new int *[9];
@@ -83,51 +94,6 @@ void DeleteArray(int **a) {
 	return;
 }
 
-int *InitSet() {
-	
-	int *initSet = new int[9], i = 0,j = 0;
-		int set[8] = { 0 };
-		double t = 0;
-		int a = 0;
-		initSet[0] = 9;
-		for (i = 1; i < 9; i++) {
-			a = rand() % 8 + 1;
-			if (set[a - 1] == 0) {
-				initSet[i] = a;
-				set[a - 1] = 1;
-			}
-			else {
-				i--;
-			}
-		}
-
-	return initSet;
-}
-
-void SolvePuzzles(int **puzzle, char *path) {
-	int **row = CreateArray(), **column = CreateArray(), **square = CreateArray();
-	int i = 0, j = 0, t = 0;
-	int *initSet = new int[9];
-	for (i = 0; i < 9; i++) {
-		initSet[i] = i + 1;
-	}
-	for (i = 0; i < 9; i++) {
-		for (j = 0; j < 9; j++) {
-			t = i / 3 * 3 + j / 3;
-			if (puzzle[i][j] != 0) {
-				row[i][puzzle[i][j] - 1] = 2;
-				column[j][puzzle[i][j] - 1] = 2;
-				square[t][puzzle[i][j] - 1] = 2;
-			}
-		}
-	}
-
-	GenerateSudokus(initSet, row, column, square, puzzle, 0, 0, 1, 1, path);
-	DeleteArray(row);
-	DeleteArray(column);
-	DeleteArray(square);
-}
-
 void print(int **a) {
 	int i = 0, j = 0;
 	for (i = 0; i < 9; i++) {
@@ -144,72 +110,191 @@ void print(int **a) {
 	return;
 }
 
-int GenerateSudokus(int *initSet, int **row, int **column, int **square, int **sudoku, int i, int j, int num, int iter, char *path) {
-	if (iter > num)
-		return iter;
-	int k = 0, t = i / 3 * 3 + j / 3;
-	int l = 0;
-	for (k = 0; k < 9; k++) {
-		if (sudoku[i][j] != 0) {
-			if (j == 8) {
-				if (i == 8) {
-					FileOutput("sudoku.txt", sudoku);
-					iter++;
-					return iter;
-				}
-				else {
-					iter = GenerateSudokus(initSet, row, column, square, sudoku, i + 1, 0, num, iter, path);
-				}
+int *InitSet() {
+	int *initSet = new int[9], i = 0,  set[8] = { 0 }, a = 0;;
+	switch (mode)
+	{
+	case 'c':
+		initSet[8] = 9;
+		for (i = 0; i < 8; i++) {
+			a = rand() % 8 + 1;
+			if (set[a - 1] == 0) {
+				initSet[i] = a;
+				set[a - 1] = 1;
 			}
 			else {
-				iter = GenerateSudokus(initSet, row, column, square, sudoku, i, j + 1, num, iter, path);
+				i--;
 			}
 		}
-		l = initSet[k];
-		if (row[i][k] != 0 || column[j][k] != 0 || square[t][k] != 0) {
-			continue;
+		break;
+	case 's':
+		for (i = 0; i < 9; i++) {
+			initSet[i] = i + 1;
 		}
-		else {
-			sudoku[i][j] = l;
-			row[i][k] = 1;
-			column[j][k] = 1;
-			square[t][k] = 1;
-			if (j == 8) {
-				if (i == 8) {
-					FileOutput(path,sudoku);
-					iter++;
-				}
-				else {
-					iter = GenerateSudokus(initSet, row, column, square, sudoku, i + 1, 0, num, iter, path);
-				}
-			}
-			else {
-				iter = GenerateSudokus(initSet, row, column, square, sudoku, i, j + 1, num, iter, path);
-			}
-		}
-		if(row[i][k] == 2){
-			return iter;
-		}
-		row[i][k] = 0;
-		column[j][k] = 0;
-		square[t][k] = 0;
-		sudoku[i][j] = 0;
+		break;
+	default:
+		break;
 	}
-	return iter;
+	for (i = 0; i < 9; i++) {
+		//cout << initSet[i];
+	}
+	return initSet;
 }
 
-void GetSudokus(int num) {
+int **CopyArray(int **ori) {
+	int i = 0, j = 0, **copy = CreateArray();
+	for (i = 0; i < 9; i++) {
+		for (j = 0; j < 9; j++) {
+			copy[i][j] = ori[i][j];
+		}
+	}
+	return copy;
+}
+
+int put(int i, int **sudoku, int *row, int *col, int *squa) {
+	int t = 0, j =  0, sign = 0;
+	for (j = 0; j < 9; j++) {
+		t = i / 3 * 3 + j / 3;
+		if (row[i] != 0 || col[j] != 0 || squa[t] != 0) {
+			continue;
+		}
+		sudoku[i][j] = FIX;
+		row[i] = col[j] = squa[t] = 1;
+		if (i == 8) {
+			cout << "put" << endl;
+			sign = SolvePuzzles(CopyArray(sudoku), "sudoku.txt");
+		}
+		else {
+			 sign = put(i + 1, sudoku, row, col, squa);
+		}
+		if (sign == -1) {
+			return sign;
+		}
+		sudoku[i][j] = row[i] = col[j] = squa[t] = 0;
+	}
+	return sign;
+}
+
+int Mix(int **puzzle, int *minSet, int **out) {
+	int i = 0, j = 0;
+	for (i = 0; i < 9; i++) {
+		for (j = 0; j < 9; j++) {
+			if (puzzle[i][j] == 9) {
+				out[i][j] = puzzle[i][j];
+			}
+			else {
+				out[i][j] = minSet[puzzle[i][j]-1];
+			}
+		}
+	}
+	n++;
+	if (n >= N) {
+		cout << "end" << endl;
+		DeleteArray(out);
+		return -1;
+	}
+	return 0;
+}
+
+int MixSet(int *mixSet, int i, int *set, int **puzzle, int **out) {
+	int j = 0, sign = 0;
+	for (j = 0; j < 8; j++) {
+		if (set[j] != 0) {
+			continue;
+		}
+		mixSet[i] = j + 1;
+		set[j] = 1;
+		if (i == 7) {
+			sign = Mix(puzzle, mixSet, out);
+		}
+		else {
+			sign = MixSet(mixSet, i + 1, set, puzzle, out);
+		}
+		if (sign == -1)
+			return sign;
+		set[j] = 0;
+	}
+	return sign;
+}
+
+int SolvePuzzles(int **puzzle, char *path) {
+	int **row = CreateArray(), **column = CreateArray(), **square = CreateArray();
+	int i = 0, j = 0, t = 0;
+	int *initSet = InitSet();
+	for (i = 0; i < 9; i++) {
+		for (j = 0; j < 9; j++) {
+			t = i / 3 * 3 + j / 3;
+			if (puzzle[i][j] != 0) {
+				row[i][puzzle[i][j] - 1] = 2;
+				column[j][puzzle[i][j] - 1] = 2;
+				square[t][puzzle[i][j] - 1] = 2;
+			}
+		}
+	}
+	int sign = GenerateSudokus(initSet, row, column, square, puzzle, 0, 0, path);
+	DeleteArray(row);
+	DeleteArray(column);
+	DeleteArray(square);
+	return sign;
+}
+
+int ToNext(int *initSet, int **row, int **column, int** square, int **sudoku, int i, int j, char *path) {
+	int sign = 0;
+	if (j == 8) {
+		if (i == 8) {
+			sign = MixSet(CreateSet(8), 0, CreateSet(8), sudoku, CreateArray());
+			if (sign == 0)
+				return -2;
+		}
+		else {
+			sign = GenerateSudokus(initSet, row, column, square, sudoku, i + 1, 0, path);
+		}
+	}
+	else {
+		sign = GenerateSudokus(initSet, row, column, square, sudoku, i, j + 1, path);
+	}
+	return sign;
+}
+
+int GenerateSudokus(int *initSet, int **row, int **column, int **square, int **sudoku, int i, int j, char *path) {
+	int sign = 0;
+	if (sudoku[i][j] != 0) {
+		sign = ToNext(initSet, row, column, square, sudoku, i, j, path);
+	}
+	else {
+		int k = 0, t = i / 3 * 3 + j / 3;
+		int l = 0;
+		for (k = 0; k < 9; k++) {
+			l = initSet[k];
+			if (row[i][k] != 0 || column[j][k] != 0 || square[t][k] != 0) {
+				continue;
+			}
+			else {
+				sudoku[i][j] = l;
+				row[i][k] = column[j][k] = square[t][k] = 1;
+				sign = ToNext(initSet, row, column, square, sudoku, i, j, path);
+				if(sign != 0)
+					return sign;
+			}
+			row[i][k] = (row[i][k] == 2) ? 2 : 0;
+			column[j][k] = (column[j][k] == 2) ? 2 : 0;
+			square[t][k] = (square[t][k] == 2) ? 2 : 0;
+			sudoku[i][j] = 0;
+		}
+	}
+	return sign;
+}
+
+void GetSudokus() {
 	ofstream outFile;
 	outFile.open("sudoku.txt", ios::out);
 	outFile.close();
-		GenerateSudokus(InitSet(), CreateArray(), CreateArray(), CreateArray(), CreateArray(), 0, 0, num, 1, "sudoku.txt");
-
+	put(0, CreateArray(), CreateSet(9), CreateSet(9), CreateSet(9));
 	return;
 }
 
 void FileOutput(char* path, int** sudoku) {
-	//ofstream outputFile;
-	//outputFile.open(path, ios::app);
+
 	FILE* outputFile;
 	freopen_s(&outputFile,path, "a",stdout);
 	char *c = new char[256];
@@ -222,7 +307,6 @@ void FileOutput(char* path, int** sudoku) {
 				c[k++] = '\n';
 			}
 			else {
-				//outputFile << sudoku[i][j] << " " ;
 				c[k++]= ' ';
 			}
 		}

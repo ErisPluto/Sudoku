@@ -49,6 +49,22 @@
 			<td>S</td>
 			<td>9/23</td>
 		</tr>
+		<tr>
+			<td>4</td>
+			<td>The output and input is really slow</td>
+			<td>Read and wirte the character one by one increase the cost on io greatly</td>
+			<td>A</td>
+			<td>N</td>
+			<td>9/25</td>
+		</tr>
+		<tr>
+			<td>5</td>
+			<td>The puzzle can not be solve when there are lots of blanks</td>
+			<td>I will go into a infinite circle and give no answer<hr>Thid is because I put the certain position into the circle</td>
+			<td>A</td>
+			<td>S</td>
+			<td>9/25</td>
+		</tr>
 		</tbody>
 	</table>
 	<h6>Note</h6>

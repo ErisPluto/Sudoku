@@ -1,8 +1,8 @@
-﻿  stdafx.cpp
-stdafx.cpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-  sudoku.cpp
+﻿  sudoku.cpp
   正在生成代码
-  All 209 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  144 of 186 functions (77.4%) were compiled, the rest were copied from previous compilation.
+    108 functions were new in current compilation
+    4 functions had inline decision re-evaluated but remain unchanged
   已完成代码的生成
   sudoku.vcxproj -> C:\Users\h-kps\Desktop\Work Space\Github\Sudoku\sudoku\x64\Release\sudoku.exe
   sudoku.vcxproj -> C:\Users\h-kps\Desktop\Work Space\Github\Sudoku\sudoku\x64\Release\sudoku.pdb (Full PDB)

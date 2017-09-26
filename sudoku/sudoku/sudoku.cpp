@@ -13,12 +13,15 @@ using std::string;
 
 #define MAX 32767
 #define FIX  9
+#define M 256 * 1024 * 1024
+
+char outStr[M];
+char inStr[M];
+int outN;
 
 int n = 0, N = 0;
 char mode = '\0';
 string out = "";
-
-ofstream outputFile;
 
 int **CreateArray();
 int *CreateSet(int num);
@@ -60,9 +63,13 @@ int main(int argc, char* args[])
 		cout << "Please input correct argments" << endl;
 		return 0;
 	}
-	outputFile.open("sudoku.txt", ios::out);
-	outputFile << out ;
-	outputFile.close();
+
+	FILE *outFile;
+	fopen_s(&outFile ,"sudoku.txt", "w");
+	outStr[outN++] = '\0';
+	fputs(outStr, outFile);
+
+	fclose(outFile);
     return 0;
 }
 
@@ -306,16 +313,19 @@ void FileOutput(char* path, int** sudoku) {
 	for (i = 0; i < 9; i++) {
 		for (j = 0; j < 9; j++) {
 			char c = sudoku[i][j] + '0';
-			out += c;
+
+			outStr[outN++] = c;
 			if (j == 8) {
-				out += "\n";
+
+				outStr[outN++] = '\n';
 			}
 			else {
-				out += "\r";
+
+				outStr[outN++] = ' ';
 			}
 		}
 	}
-	out += "\n";
+	outStr[outN++] = '\n';
 	return;
 }
 

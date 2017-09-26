@@ -1,2 +1,6 @@
-﻿  正在跳过...(未检测到相关更改)
+﻿  stdafx.cpp
   sudoku.cpp
+LINK : warning LNK4075: 忽略“/INCREMENTAL”(由于“/PROFILE”规范)
+stdafx.obj : warning LNK4075: 忽略“/EDITANDCONTINUE”(由于“/OPT:REF”规范)
+  sudoku.vcxproj -> C:\Users\h-kps\Desktop\Work Space\Github\Sudoku\sudoku\x64\Debug\sudoku.exe
+  sudoku.vcxproj -> C:\Users\h-kps\Desktop\Work Space\Github\Sudoku\sudoku\x64\Debug\sudoku.pdb (Partial PDB)

@@ -1,5 +1,2 @@
-﻿  sudoku.cpp
-c:\users\h-kps\desktop\work space\github\sudoku\sudoku\sudoku\sudoku.cpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\users\h-kps\desktop\work space\github\sudoku\sudoku\sudoku\sudoku.cpp(30): warning C4101: “num”: 未引用的局部变量
-  sudoku.vcxproj -> C:\Users\h-kps\Desktop\Work Space\Github\Sudoku\sudoku\x64\Debug\sudoku.exe
-  sudoku.vcxproj -> C:\Users\h-kps\Desktop\Work Space\Github\Sudoku\sudoku\x64\Debug\sudoku.pdb (Partial PDB)
+﻿  正在跳过...(未检测到相关更改)
+  sudoku.cpp

@@ -1,21 +1,29 @@
-// sudoku.cpp: 定义控制台应用程序的入口点。
-//
+// //
 
 #include "stdafx.h"
 #include <iostream>
 #include <fstream>
 #include <string.h>
 #include <time.h>
+#include <string>
+#include <sstream>
 
 using namespace std;
+using std::string;
 
 #define MAX 32767
 #define FIX  9
 
 int n = 0, N = 0;
 char mode = '\0';
+string out = "";
 
-void GetSudokus();
+ofstream outputFile;
+
+int **CreateArray();
+int *CreateSet(int num);
+void DeleteArray(int **array);
+int GetSudokus(int i, int **sudoku, int *row, int *col, int *squa);
 int GenerateSudokus(int *initSet, int **row, int **column, int **square, int **sudoku, int i, int j, char *path);
 int* InitSet();
 int SolvePuzzles(int **puzzle, char *path);
@@ -27,7 +35,7 @@ int ToNum(char* n);
 int main(int argc, char* args[])
 {
 	srand((unsigned)(time(NULL)));
-	int num;
+
 	if (argc == 3) {
 		if (strcmp(args[1], "-c") == 0) {
 			mode = 'c';
@@ -36,8 +44,7 @@ int main(int argc, char* args[])
 				cout << "Please input correct argments" << endl;
 				return 0;
 			}
-			cout << N << endl;
-			GetSudokus();
+			GetSudokus(0, CreateArray(), CreateSet(9), CreateSet(9), CreateSet(9));
 		}
 		else if(strcmp(args[1], "-s") == 0)
 		{
@@ -53,6 +60,9 @@ int main(int argc, char* args[])
 		cout << "Please input correct argments" << endl;
 		return 0;
 	}
+	outputFile.open("sudoku.txt", ios::out);
+	outputFile << out ;
+	outputFile.close();
     return 0;
 }
 
@@ -151,7 +161,7 @@ int **CopyArray(int **ori) {
 	return copy;
 }
 
-int put(int i, int **sudoku, int *row, int *col, int *squa) {
+int GetSudokus(int i, int **sudoku, int *row, int *col, int *squa) {
 	int t = 0, j =  0, sign = 0;
 	for (j = 0; j < 9; j++) {
 		t = i / 3 * 3 + j / 3;
@@ -161,11 +171,10 @@ int put(int i, int **sudoku, int *row, int *col, int *squa) {
 		sudoku[i][j] = FIX;
 		row[i] = col[j] = squa[t] = 1;
 		if (i == 8) {
-			cout << "put" << endl;
 			sign = SolvePuzzles(CopyArray(sudoku), "sudoku.txt");
 		}
 		else {
-			 sign = put(i + 1, sudoku, row, col, squa);
+			 sign = GetSudokus(i + 1, sudoku, row, col, squa);
 		}
 		if (sign == -1) {
 			return sign;
@@ -188,8 +197,8 @@ int Mix(int **puzzle, int *minSet, int **out) {
 		}
 	}
 	n++;
+	FileOutput("sudoku.txt", out);
 	if (n >= N) {
-		cout << "end" << endl;
 		DeleteArray(out);
 		return -1;
 	}
@@ -242,7 +251,13 @@ int ToNext(int *initSet, int **row, int **column, int** square, int **sudoku, in
 	int sign = 0;
 	if (j == 8) {
 		if (i == 8) {
-			sign = MixSet(CreateSet(8), 0, CreateSet(8), sudoku, CreateArray());
+			if (mode == 'c') {
+				sign = MixSet(CreateSet(8), 0, CreateSet(8), sudoku, CreateArray());
+			}
+			else {
+				FileOutput(path, sudoku);
+				sign = -2;
+			}
 			if (sign == 0)
 				return -2;
 		}
@@ -285,36 +300,22 @@ int GenerateSudokus(int *initSet, int **row, int **column, int **square, int **s
 	return sign;
 }
 
-void GetSudokus() {
-	ofstream outFile;
-	outFile.open("sudoku.txt", ios::out);
-	outFile.close();
-	put(0, CreateArray(), CreateSet(9), CreateSet(9), CreateSet(9));
-	return;
-}
-
 void FileOutput(char* path, int** sudoku) {
 
-	FILE* outputFile;
-	freopen_s(&outputFile,path, "a",stdout);
-	char *c = new char[256];
-	memset(c, 0, sizeof(char) * 256);
 	int i = 0, j = 0, k = 0;
 	for (i = 0; i < 9; i++) {
 		for (j = 0; j < 9; j++) {
-			c[k++] = sudoku[i][j] + '0';
+			char c = sudoku[i][j] + '0';
+			out += c;
 			if (j == 8) {
-				c[k++] = '\n';
+				out += "\n";
 			}
 			else {
-				c[k++]= ' ';
+				out += "\r";
 			}
 		}
 	}
-	c[k++] = '\n';
-	puts(c);
-	fclose(outputFile);
-	delete c;
+	out += "\n";
 	return;
 }
 
@@ -326,13 +327,13 @@ int PuzzleInput(char *path) {
 		return -1;
 	}
 	int **puzzle = CreateArray();
-	ofstream outFile;
-	outFile.open("sudoku.txt", ios::out);
-	outFile.close();
+	stringstream in;
+	in << inFile.rdbuf();
+	string inStr = in.str();
 	char c;
-	int i = 0, j = 0;
-	while (!inFile.eof()) {
-		inFile.read(&c, 1);
+	int i = 0, j = 0, k = 0;
+	while (k < inStr.length()) {
+		c = inStr[k];
 		if (c != ' ' && c != '\n') {
 			puzzle[i][j] = c - '0';
 			if (j == 8) {
@@ -350,6 +351,7 @@ int PuzzleInput(char *path) {
 				j++;
 			}
 		}
+		k++;
 	}
 	inFile.close();
 	return 0;
